@@ -1,0 +1,71 @@
+// Array untuk nomor kamar
+const standardRoomNumbers = ['101', '102', '103', '104', '105'];
+const deluxeRoomNumbers = ['201', '202', '203', '204', '205'];
+
+// Mendapatkan elemen select untuk tipe kamar
+const roomTypeSelect = document.getElementById('room-type');
+
+// Mendapatkan elemen select untuk nomor kamar
+const roomNumberSelect = document.getElementById('room-number');
+
+// Mendapatkan elemen form
+const form = document.getElementById('bookingForm');
+
+// Menambahkan event listener untuk onChange pada tipe kamar
+roomTypeSelect.addEventListener('change', handleRoomTypeChange);
+
+// Menambahkan event listener untuk submit form
+form.addEventListener('submit', function(event) {
+  event.preventDefault(); // Mencegah pengiriman form secara default
+
+  // Mendapatkan nilai inputan
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
+  const dob = document.getElementById('dob').value;
+  const roomType = document.getElementById('room-type').value;
+  const roomNumber = document.getElementById('room-number').value;
+
+  // Menampilkan summary data
+  updateSummary(name, email, phone, dob, roomType, roomNumber);
+
+  // Mengosongkan inputan setelah submit
+  form.reset();
+});
+
+// Fungsi untuk menangani perubahan tipe kamar
+function handleRoomTypeChange() {
+  roomNumberSelect.innerHTML = ''; // Mengosongkan pilihan sebelumnya
+
+  const errorParagraph = document.querySelector('.error');
+
+  if (this.value === 'standard') {
+    standardRoomNumbers.forEach(number => {
+      const option = document.createElement('option');
+      option.value = number;
+      option.text = number;
+      roomNumberSelect.add(option);
+    });
+    errorParagraph.textContent = ''; // Menghapus teks error sebelumnya
+  } else if (this.value === 'deluxe') {
+    deluxeRoomNumbers.forEach(number => {
+      const option = document.createElement('option');
+      option.value = number;
+      option.text = number;
+      roomNumberSelect.add(option);
+    });
+    errorParagraph.textContent = ''; // Menghapus teks error sebelumnya
+  } else if (this.value === 'suite') {
+    errorParagraph.textContent = 'Mohon maaf kamar penuh';
+  }
+}
+
+// Fungsi untuk menampilkan summary data
+function updateSummary(name, email, phone, dob, roomType, roomNumber) {
+  document.getElementById('summaryName').textContent = name;
+  document.getElementById('summaryEmail').textContent = email;
+  document.getElementById('summaryPhone').textContent = phone;
+  document.getElementById('summaryDob').textContent = dob;
+  document.getElementById('summaryRoomType').textContent = roomType;
+  // Tambahkan elemen untuk menampilkan nomor kamar jika dibutuhkan
+}
