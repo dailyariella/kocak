@@ -1,0 +1,113 @@
+// Array untuk menyimpan add-on berdasarkan atraksi
+    const addOnOptions = {
+      "Safari Tour": [],
+      "Bird Show": [], // Ditambahkan sesuai array addOnBird
+      "Aquarium Visit": [] 
+    };
+    
+    // Array tambahan untuk add-on pada Aquarium Visit dan Bird Show
+    const addOnBird = ["Cola", "Orange Juice", "Mini Donut"];
+    const addOnAquarium = ['Hot Chocolate', 'Ice Cream', 'Snacks'];
+    
+    // Function untuk mengupdate pilihan add-on berdasarkan atraksi yang dipilih
+    function updateAddOnOptions() {
+      const attractionType = document.getElementById("attractionType").value;
+      const addOnSelect = document.getElementById("addOn");
+      let addOnOptionsForAttraction = addOnOptions[attractionType] || [];
+    
+      // Jika atraksi adalah "Bird Show", tambahkan opsi tambahan dari array addOnBird
+      if (attractionType === "Bird Show") {
+        addOnOptionsForAttraction = addOnOptionsForAttraction.concat(addOnBird);
+      }
+    
+      // Jika atraksi adalah "Aquarium Visit", tambahkan opsi tambahan dari array addOnAquarium
+      if (attractionType === "Aquarium Visit") {
+        addOnOptionsForAttraction = addOnOptionsForAttraction.concat(addOnAquarium);
+      }
+    
+      // Reset pilihan add-on
+      addOnSelect.innerHTML = '<option value="">Select</option>';
+    
+      // Tambahkan opsi add-on sesuai dengan atraksi yang dipilih
+      addOnOptionsForAttraction.forEach(option => {
+        addOnSelect.innerHTML += <option value="${option}">${option}</option>;
+      });
+    }
+    
+    // Function untuk menangani perubahan pada pilihan atraksi
+    function attractionChangeHandler() {
+      const errorMessage = document.getElementById("error-message");
+      const attractionType = document.getElementById("attractionType").value;
+    
+      // Jika atraksi yang dipilih adalah "Safari Tour", tampilkan pesan bahwa atraksi penuh
+      if (attractionType === "Safari Tour") {
+        errorMessage.textContent = "Mohon maaf, atraksi penuh";
+      } else {
+        errorMessage.textContent = ""; // Hapus pesan jika memilih atraksi lain
+      }
+    
+      // Update pilihan add-on sesuai dengan atraksi yang dipilih
+      updateAddOnOptions();
+    }
+    
+    // Function untuk mengosongkan inputan pada form setelah berhasil disubmit
+    function resetFormInputs() {
+      document.getElementById("zooForm").reset();
+    }
+    
+    // Function untuk membuat reservasi
+    function makeReservation() {
+      var reservationData = {};
+
+      // Mengambil nilai input nama, email, nomor telepon, dan tanggal
+      reservationData.name = document.getElementById('name').value;
+      reservationData.email = document.getElementById('email').value;
+      reservationData.phone = document.getElementById('phone').value;
+      reservationData.tgl = document.getElementById('tgl').value;
+
+      // Mengambil nilai jumlah tiket
+      reservationData.tickets = document.getElementById('tickets').value;
+
+      // Mengambil nilai dari elemen select attractionType
+      var attractionSelect = document.getElementById('attractionType');
+      reservationData.attraction = attractionSelect.options[attractionSelect.selectedIndex].value;
+
+      // Mengambil nilai dari elemen select addOn
+      var addOnSelect = document.getElementById('addOn');
+      reservationData.addOn = addOnSelect.options[addOnSelect.selectedIndex].value;
+
+      // Memeriksa apakah nilai attraction dan addOn tidak kosong
+      if (reservationData.attraction === "" || reservationData.addOn === "") {
+        // Jika salah satu atau keduanya kosong, tampilkan pesan kesalahan
+        document.getElementById('error-message').innerText = "Mohon pilih atraksi dan add on.";
+      } else {
+        // Jika kedua nilai tidak kosong, lanjutkan dengan proses reservasi
+        document.getElementById('error-message').innerText = "";
+
+        // Lakukan proses reservasi di sini
+        // Contoh: alert(JSON.stringify(reservationData));
+        const alertMessage = `
+          Reservation successfully made!
+          Name: ${reservationData.name}
+          Email: ${reservationData.email}
+          Phone: ${reservationData.phone}
+          Date: ${reservationData.tgl}
+          Attraction: ${reservationData.attraction}
+          Tickets: ${reservationData.tickets}
+          Add-On: ${reservationData.addOn || 'None'}
+        `;
+        alert(alertMessage);
+        
+        // Validasi jika atraksi dipilih adalah "Safari Tour"
+        if (reservationData.attraction === "Safari Tour") {
+          alert("Mohon maaf, Safari Tour sudah penuh.");
+          return;
+        }
+        
+        // Mengosongkan inputan form setelah berhasil disubmit
+        resetFormInputs();
+      }
+    }
+    
+    // Menambahkan event listener untuk perubahan pada pilihan atraksi
+    document.getElementById("attractionType").addEventListener("change", attractionChangeHandler);
